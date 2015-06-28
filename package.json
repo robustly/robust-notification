@@ -1,5 +1,5 @@
 {
-  "name": "lib-base",
+  "name": "robust-notification",
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:webinverters/lib-base.git"
+    "url": "git@github.com:webinverters/robust-notification.git"
   },
   "author": "Justin Mooser",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/webinverters/lib-base/issues"
+    "url": "https://github.com/webinverters/robust-notification/issues"
   },
-  "homepage": "https://github.com/webinverters/lib-base",
+  "homepage": "https://github.com/webinverters/robust-notification",
   "devDependencies": {
     "chai": "^1.x.x",
     "chai-as-promised": "^4.1.1",
