@@ -14,12 +14,12 @@
 var p = require('bluebird');
 var _ = require('lodash');
 
-module.exports = function construct(config, deps) {
+module.exports = function construct(config, log, deps) {
   var m = {};
   config = config ? config : {};
   config = _.defaults(config, {});
-  deps = deps || {};
 
+  deps = deps || {}
   var emailTemplatesAsync = p.promisify(require('email-templates'));
 
   function sendTemplatedEmail(type, params) {
@@ -40,11 +40,11 @@ module.exports = function construct(config, deps) {
             params.text = text;
             params.recipients = locals.email || locals.recipients;
             if (err) {
-              console.log(err);
+              log.error(err);
             } else {
               emailSendingActions.push(m.sendEmail(params)
                 .catch(function (err) {
-                  console.log(err);
+                  log.error(err);
                   // TODO: queue the email if the error was an intermittent issue.
                   throw err;
                 }));
@@ -63,7 +63,7 @@ module.exports = function construct(config, deps) {
         };
 
         // Load the template and send the emails
-        template(type, true, function (err, batch) {
+        template(params.template || type, true, function (err, batch) {
           if (err) {
             return deferred.reject(err);
           }
@@ -95,6 +95,7 @@ module.exports = function construct(config, deps) {
     if (!deps.nodemailer) {
       transport = p.promisifyAll(transport);
     }
+
     /**
      * sendEmail
      *
@@ -102,9 +103,10 @@ module.exports = function construct(config, deps) {
      * @returns {*}
      */
     m.sendEmail = function(params) {
+      log.debug('sendEmail(params)', params);
       return transport.sendMailAsync({
         from: params.from,
-        to: params.recipients,
+        to: formatRecipients(params.recipients),
         subject: params.subject,
         html: params.html || params.body,
         text: params.text
@@ -115,12 +117,36 @@ module.exports = function construct(config, deps) {
   }
 
   m.send = function(type, params) {
+    params = reconcileConfigurationWithLocalParams(config, type, params);
+
     if (m.sendEmail) {
       return sendTemplatedEmail(type, params);
     } else {
       throw 'sendEmail is not defined.';
     }
+
+    // TODO: add robust fallbacks
+    // TODO: add local-storage-fallbacks
   };
+
+  function reconcileConfigurationWithLocalParams(config, type, params) {
+    if (config.notificationTypes[type]) {
+      params.recipients = params.recipients || config.notificationTypes[type].defaultRecipients;
+      params.template = params.template || config.notificationTypes[type].defaultTemplate;
+    }
+    return params;
+  }
+
+  function formatRecipients(recipients) {
+    if (_.isArray(recipients)) {
+      return _.map(recipients, function(recipient) {
+        return recipient.email;
+      }).join(',');
+    } else {
+      return recipients.email;
+    }
+  }
 
   return m;
 };
+

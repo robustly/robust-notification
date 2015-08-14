@@ -5,23 +5,21 @@
  * @description:
  *
  * Author: Justin Mooser
- * Created On: 2015-06-26.
+ * Created On: 2015-07-13.
  * @license Apache-2.0
  */
 
 "use strict";
 
-var path = require('path');
+var config = require('./config');
 
-require('dotenv').load();
-
-var notification = require('../')({
+var notification = require('../index')({
   mediums: {
     email: {
       service: 'Gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: config.emailAccount,
+        pass: config.emailPass
       }
     }
   },
@@ -44,13 +42,13 @@ notification.send('test-welcome', {
       last: 'Pizza'
     }
   },
-  {
-    email: 'mrjustinmooser@gmail.com',
-    name: {
-      first: 'Mister',
-      last: 'Geppetto'
-    }
-  }],  // name is available in the locals for batch emails.
+    {
+      email: 'mrjustinmooser@gmail.com',
+      name: {
+        first: 'Mister',
+        last: 'Geppetto'
+      }
+    }],  // name is available in the locals for batch emails.
   subject: 'Hello!'
   //sender: [{name: 'John', email: 'xxx@x.com', sms: '5195445321'}],
   //body: 'body',
