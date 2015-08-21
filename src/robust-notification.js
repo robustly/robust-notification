@@ -131,7 +131,7 @@ module.exports = function construct(config, log, deps) {
   };
 
   function reconcileConfigurationWithLocalParams(config, type, params) {
-    if (config.notificationTypes[type]) {
+    if (config.notificationTypes && config.notificationTypes[type]) {
       params.recipients = params.recipients || config.notificationTypes[type].defaultRecipients;
       params.template = params.template || config.notificationTypes[type].defaultTemplate;
     }
