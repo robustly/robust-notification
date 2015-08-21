@@ -39,6 +39,7 @@ module.exports = function construct(config, log, deps) {
             params.html = html;
             params.text = text;
             params.recipients = locals.email || locals.recipients;
+            log.debug('Sending email', params.recipients);
             if (err) {
               log.error(err);
             } else {
@@ -143,9 +144,10 @@ module.exports = function construct(config, log, deps) {
       return _.map(recipients, function(recipient) {
         return recipient.email;
       }).join(',');
-    } else {
+    } else if (_.isObject(recipients)){
       return recipients.email;
     }
+    else return recipients;
   }
 
   return m;
