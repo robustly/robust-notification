@@ -120,6 +120,7 @@ module.exports = function construct(config, log, deps) {
     params = reconcileConfigurationWithLocalParams(config, type, params);
 
     if (m.sendEmail) {
+      params.recipients = formatRecipients(params.recipients);
       return sendTemplatedEmail(type, params);
     } else {
       throw 'sendEmail is not defined.';

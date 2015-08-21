@@ -52,19 +52,8 @@ var recipe ={
   content: 'hello',
   title: 'whatever',
   recipients: [{
-    email: 'justin@webinverters.com',
-    name: {
-      first: 'Pappa',
-      last: 'Pizza'
-    }
-  },
-    {
-      email: 'mrjustinmooser@gmail.com',
-      name: {
-        first: 'Mister',
-        last: 'Geppetto'
-      }
-    }],
+    email: 'justin@webinverters.com'
+  }],
   mediums: {
     email: {
       service: 'Gmail',
@@ -81,19 +70,6 @@ var notification = Notification(recipe, console);
 notification.sendEmail({
   text: recipe.content,
   subject: recipe.title,
-  recipients: [{
-    email: 'justin@webinverters.com',
-    name: {
-      first: 'Pappa',
-      last: 'Pizza'
-    }
-  },
-    {
-      email: 'mrjustinmooser@gmail.com',
-      name: {
-        first: 'Mister',
-        last: 'Geppetto'
-      }
-    }],
+  recipients: recipe.recipients,
   from: recipe.mediums.email.auth.user
 })
