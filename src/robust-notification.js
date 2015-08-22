@@ -66,8 +66,11 @@ module.exports = function construct(config, log, deps) {
         // Load the template and send the emails
         template(params.template || type, true, function (err, batch) {
           if (err) {
+            console.log('Error Loading Template', err);
             return deferred.reject(err);
           }
+
+          console.log('Template loaded', batch);
 
           if (_.isArray(params.recipients)) {
             for (var user in params.recipients) {
