@@ -59,6 +59,7 @@ module.exports = function construct(config, log, deps) {
             }
           };
           this.batch = function (batch) {
+            console.log('STUFF', this.locals, config.templateDir, this.send);
             batch(this.locals, config.templateDir, this.send);
           };
         };
